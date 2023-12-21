@@ -6,6 +6,12 @@ class ClickMate(QtWidgets.QMainWindow):
     def __init__(self):
         super().__init__()
         self.setupUI()
+        self.click_interval = "Set Time"
+
+        self.mouse_button = "Left"
+        self.click_type = "Single"
+
+        self.click_repeat = "Continuous"
 
     def setupUI(self):
         self.setFixedSize(600, 500)
@@ -30,11 +36,13 @@ class ClickMate(QtWidgets.QMainWindow):
 
         self.set_time_radio = QtWidgets.QRadioButton("Set Time", self.widget_6)
         self.set_time_radio.setChecked(True)
+        self.set_time_radio.clicked.connect(lambda: self.onClickIntervalClicked("Set Time"))
         self.horizontalLayout_9.addWidget(self.set_time_radio)
 
         self.random_interval_radio = QtWidgets.QRadioButton("Random Interval", self.widget_6)
         self.random_interval_radio.setEnabled(True)
         self.random_interval_radio.setLayoutDirection(QtCore.Qt.LeftToRight)
+        self.random_interval_radio.clicked.connect(lambda: self.onClickIntervalClicked("Random Interval"))
         self.horizontalLayout_9.addWidget(self.random_interval_radio)
 
         self.verticalLayout_10.addWidget(self.widget_6)
@@ -89,6 +97,7 @@ class ClickMate(QtWidgets.QMainWindow):
         self.seconds_layout.setSpacing(5)
 
         self.seconds_edit = QtWidgets.QLineEdit(self.widget_8)
+        self.seconds_edit.setText("1")
         self.seconds_edit.setPlaceholderText("0")
         self.seconds_edit.setAlignment(QtCore.Qt.AlignCenter)
         self.seconds_layout.addWidget(self.seconds_edit)
@@ -138,6 +147,7 @@ class ClickMate(QtWidgets.QMainWindow):
         self.from_edit = QtWidgets.QLineEdit(self.widget_9)
         self.from_edit.setPlaceholderText("0")
         self.from_edit.setAlignment(QtCore.Qt.AlignCenter)
+        self.from_edit.setEnabled(False)
         self.from_layout.addWidget(self.from_edit)
 
         self.from_label = QtWidgets.QLabel("Seconds", self.widget_9)
@@ -155,6 +165,7 @@ class ClickMate(QtWidgets.QMainWindow):
         self.to_edit = QtWidgets.QLineEdit(self.widget_9)
         self.to_edit.setPlaceholderText("0")
         self.to_edit.setAlignment(QtCore.Qt.AlignCenter)
+        self.to_edit.setEnabled(False)
         self.to_layout.addWidget(self.to_edit)
 
         self.to_label = QtWidgets.QLabel("Seconds", self.widget_9)
@@ -171,7 +182,7 @@ class ClickMate(QtWidgets.QMainWindow):
 
         self.horizontalLayout_8.addWidget(self.widget_9)
 
-        self.horizontalLayout_8.setStretch(0, 2)
+        self.horizontalLayout_8.setStretch(0, 1)
         self.horizontalLayout_8.setStretch(1, 1)
 
         self.verticalLayout_10.addWidget(self.widget_7)
@@ -207,16 +218,19 @@ class ClickMate(QtWidgets.QMainWindow):
         self.left_button.setCursor(QtGui.QCursor(QtCore.Qt.PointingHandCursor))
         self.left_button.setCheckable(True)
         self.left_button.setChecked(True)
+        self.left_button.clicked.connect(lambda: self.onMouseButtonClicked("Left"))
         self.horizontalLayout_3.addWidget(self.left_button)
 
         self.middle_button = QtWidgets.QPushButton("Middle", self.widget_3)
         self.middle_button.setCursor(QtGui.QCursor(QtCore.Qt.PointingHandCursor))
         self.middle_button.setCheckable(True)
+        self.middle_button.clicked.connect(lambda: self.onMouseButtonClicked("Middle"))
         self.horizontalLayout_3.addWidget(self.middle_button)
 
         self.right_button = QtWidgets.QPushButton("Right", self.widget_3)
         self.right_button.setCursor(QtGui.QCursor(QtCore.Qt.PointingHandCursor))
         self.right_button.setCheckable(True)
+        self.right_button.clicked.connect(lambda: self.onMouseButtonClicked("Right"))
         self.horizontalLayout_3.addWidget(self.right_button)
 
         self.horizontalLayout_3.setStretch(0, 1)
@@ -238,11 +252,13 @@ class ClickMate(QtWidgets.QMainWindow):
         self.single_button.setCursor(QtGui.QCursor(QtCore.Qt.PointingHandCursor))
         self.single_button.setCheckable(True)
         self.single_button.setChecked(True)
+        self.single_button.clicked.connect(lambda: self.onClickTypeClicked("Single"))
         self.horizontalLayout_4.addWidget(self.single_button)
 
         self.double_button = QtWidgets.QPushButton("Double", self.widget_4)
         self.double_button.setCursor(QtGui.QCursor(QtCore.Qt.PointingHandCursor))
         self.double_button.setCheckable(True)
+        self.double_button.clicked.connect(lambda: self.onClickTypeClicked("Double"))
         self.horizontalLayout_4.addWidget(self.double_button)
 
         self.horizontalLayout_4.setStretch(0, 1)
@@ -265,7 +281,7 @@ class ClickMate(QtWidgets.QMainWindow):
         self.verticalLayout_3.setSpacing(5)
 
         self.limited_radio = QtWidgets.QRadioButton("Limited", self.click_repeat_box)
-        self.limited_radio.setChecked(True)
+        self.limited_radio.clicked.connect(lambda: self.onClickRepeatClicked("Limited"))
         self.verticalLayout_3.addWidget(self.limited_radio)
 
         self.widget_5 = QtWidgets.QWidget(self.click_repeat_box)
@@ -277,6 +293,7 @@ class ClickMate(QtWidgets.QMainWindow):
         self.clicks_edit = QtWidgets.QLineEdit(self.widget_5)
         self.clicks_edit.setPlaceholderText("0")
         self.clicks_edit.setAlignment(QtCore.Qt.AlignCenter)
+        self.clicks_edit.setEnabled(False)
         self.horizontalLayout_5.addWidget(self.clicks_edit)
 
         self.clicks_label = QtWidgets.QLabel("Clicks", self.widget_5)
@@ -289,6 +306,8 @@ class ClickMate(QtWidgets.QMainWindow):
         self.verticalLayout_3.addWidget(self.widget_5)
 
         self.continuous_radio = QtWidgets.QRadioButton("Continuous", self.click_repeat_box)
+        self.continuous_radio.setChecked(True)
+        self.continuous_radio.clicked.connect(lambda: self.onClickRepeatClicked("Continuous"))
         self.verticalLayout_3.addWidget(self.continuous_radio)
 
         self.verticalLayout_3.setStretch(0, 2)
@@ -326,6 +345,69 @@ class ClickMate(QtWidgets.QMainWindow):
         self.verticalLayout.setStretch(2, 1)
 
         self.setCentralWidget(self.central_widget)
+
+        self.setInputValidator()
+
+    def setInputValidator(self):
+        input_fields = [self.hours_edit, self.minutes_edit, self.seconds_edit, self.milli_edit, self.from_edit, self.to_edit, self.clicks_edit]
+
+        validator = QtGui.QIntValidator()
+        validator.setBottom(0)
+        validator.setTop(1000)
+
+        for field in input_fields:
+            field.setValidator(validator)
+
+    def onClickIntervalClicked(self, click_interval):
+        self.click_interval = click_interval
+        self.seconds_edit.setText("1")
+
+        if click_interval == "Set Time":
+            enable_time_fields = [self.hours_edit, self.minutes_edit, self.seconds_edit, self.milli_edit]
+            clear_time_fields = [self.from_edit, self.to_edit]
+            disable_time_fields = [self.from_edit, self.to_edit]
+        elif click_interval == "Random Interval":
+            enable_time_fields = [self.from_edit, self.to_edit]
+            clear_time_fields = [self.hours_edit, self.minutes_edit, self.milli_edit]
+            disable_time_fields = [self.hours_edit, self.minutes_edit, self.seconds_edit, self.milli_edit]
+
+        for field in enable_time_fields:
+            field.setEnabled(True)
+
+        for field in disable_time_fields:
+            field.setEnabled(False)
+
+        for field in clear_time_fields:
+            field.clear()
+
+    def onMouseButtonClicked(self, mouse_button):
+        button_mapping = {"Left": self.left_button, "Middle": self.middle_button, "Right": self.right_button}
+
+        if self.mouse_button != mouse_button:
+            self.mouse_button = mouse_button
+            for button, checkbox in button_mapping.items():
+                checkbox.setChecked(button == mouse_button)
+        else:
+            button_mapping[mouse_button].setChecked(True)
+
+    def onClickTypeClicked(self, click_type):
+        button_mapping = {"Single": self.single_button, "Double": self.double_button}
+
+        if self.click_type != click_type:
+            self.click_type = click_type
+            for button, checkbox in button_mapping.items():
+                checkbox.setChecked(button == click_type)
+        else:
+            button_mapping[click_type].setChecked(True)
+
+    def onClickRepeatClicked(self, click_repeat):
+        self.click_repeat = click_repeat
+
+        if click_repeat == "Limited":
+            self.clicks_edit.setEnabled(True)
+        elif click_repeat == "Continuous":
+            self.clicks_edit.setEnabled(False)
+            self.clicks_edit.clear()
 
 
 if __name__ == "__main__":
