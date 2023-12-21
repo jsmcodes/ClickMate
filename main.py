@@ -7,10 +7,8 @@ class ClickMate(QtWidgets.QMainWindow):
         super().__init__()
         self.setupUI()
         self.click_interval = "Set Time"
-
         self.mouse_button = "Left"
         self.click_type = "Single"
-
         self.click_repeat = "Continuous"
 
     def setupUI(self):
@@ -329,11 +327,13 @@ class ClickMate(QtWidgets.QMainWindow):
 
         self.start_button = QtWidgets.QPushButton("Start", self.widget_2)
         self.start_button.setCursor(QtGui.QCursor(QtCore.Qt.PointingHandCursor))
+        self.start_button.clicked.connect(self.onStartClicked)
         self.horizontalLayout_2.addWidget(self.start_button)
 
         self.stop_button = QtWidgets.QPushButton("Stop", self.widget_2)
         self.stop_button.setCursor(QtGui.QCursor(QtCore.Qt.PointingHandCursor))
         self.stop_button.setEnabled(False)
+        self.stop_button.clicked.connect(self.onStopClicked)
         self.horizontalLayout_2.addWidget(self.stop_button)
 
         self.horizontalLayout_2.setStretch(0, 1)
@@ -347,6 +347,18 @@ class ClickMate(QtWidgets.QMainWindow):
         self.setCentralWidget(self.central_widget)
 
         self.setInputValidator()
+
+    def onStartClicked(self):
+        self.start_button.setEnabled(False)
+        self.stop_button.setEnabled(True)
+        self.click_interval_box.setEnabled(False)
+        self.widget.setEnabled(False)
+
+    def onStopClicked(self):
+        self.start_button.setEnabled(True)
+        self.stop_button.setEnabled(False)
+        self.click_interval_box.setEnabled(True)
+        self.widget.setEnabled(True)
 
     def setInputValidator(self):
         input_fields = [self.hours_edit, self.minutes_edit, self.seconds_edit, self.milli_edit, self.from_edit, self.to_edit, self.clicks_edit]
